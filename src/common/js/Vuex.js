@@ -10,6 +10,7 @@ export default new vuex.Store({
     dept:"",
     clothNo:"",
     historyId:"",
-    inShow:false
+    inShow:false,
+    printing:false,
   }
 })

@@ -4,7 +4,7 @@
       <el-form :model="form">
         <el-form-item label="入库单号" :label-width="formLabelWidth">
           <el-select v-model="form.inNo" placeholder="请选择单号">
-            <el-option v-for="item in inData"
+            <el-option v-for="item in verifyData"
                        :value="item"
                        :label="item">
             </el-option>
@@ -20,11 +20,11 @@
 </template>
 
 <script>
-  import {vatInNo} from '../../common/js/axios/getData';
+  import {vatOut} from '../../common/js/axios/getData';
   export default {
     name: "vatIn",
     props:{
-      inData:{
+      verifyData:{
         type:Array,
         default:()=>[]
       }
@@ -42,9 +42,8 @@
     methods:{
       inCheck(){
         let inNo =this.form.inNo;
-        vatInNo(inNo).then(res=>{
+        vatOut(inNo).then(res=>{
           this.form.inNo = '';
-          this.inList = [];
           let data = JSON.parse(res.data);
           this.$store.state.inShow = false;
           this.$emit('vatCheck',data);

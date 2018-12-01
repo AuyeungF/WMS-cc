@@ -27,18 +27,15 @@ export const postList = (data) => axios('/data/saveValidate/'+data);
 export const printItem = (data)=> axios('/data/findInPrintHistory/'+data,data,'POST');
 /*  校验历史记录  */
 export const verifyItem = (data) => axios('/data/findInValidateHistory/'+data,data,'POST');
-/*  根据缸号查入库单的单号列表 */
 
 
-/*  出库 */
-export const outbound = (data) => axios('/wms/product/out/'+ data);
-/*  出库查询  */
-export const outCheck = (data) => axios('/data/product/out/A15103796',data,'POST');
 /*  出库查询校验  */
-
+export const outCheck = (data) => axios('/data/getValidateOutOrder/'+data);
 /*  缸号查询校验  */
-
+export const outVerify = (data) =>  axios('/data/getOutNoListByVatDye/'+data);
 /*  查询缸号后出库查询 */
-
+export const vatOut = (data) =>axios('/data/getValidateOutOrder/'+data.out_no+"?vatDye="+data.vat_no);
 /*  出库校验提交  */
-
+export const postVerify = (data) => axios('/data/saveOutValidate/' + data);
+/*  开始校验  */
+export const openVerify = () => axios('/reader/validate?type=out');

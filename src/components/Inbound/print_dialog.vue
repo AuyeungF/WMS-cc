@@ -71,11 +71,13 @@
               btnShow:false,/*显示操作按钮*/
             },
             printShow:false,
+            fullscreenLoading: false
           }
       },
       components:{itable},
       methods:{
         printing(){
+          this.$store.state.printing = true;
           this.form.productInDList = this.list;
           let date = this.form.in_date;
           let  time = new Date(date);
@@ -90,6 +92,7 @@
               .then(res=>{
                 if(res == '打印成功') {
                   saveInbound(data).then(res=>{
+                    this.$store.state.printing = false;
                     this.$message({
                       message: '保存成功' ,
                       type: 'success'

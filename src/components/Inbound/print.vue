@@ -35,7 +35,7 @@
          >
          </itable>
          <div class="in_btn btn-show top10">
-           <el-button type="primary" @click="printing" class="btn-print">打印标签</el-button>
+           <el-button type="primary" @click="printing" class="btn-print" :disabled="$store.state.printing">打印标签</el-button>
            <el-button type="warning" @click="checkOut" class="btn-check">校验布匹</el-button>
          </div>
        </div>
@@ -155,7 +155,6 @@
         this.vatFlag=true;
         vatAll(data)
           .then(res=>{
-
             if(res.code == 1){
               this.inList = res.data;
               this.$store.state.inShow = true;

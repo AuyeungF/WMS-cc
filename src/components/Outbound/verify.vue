@@ -39,9 +39,10 @@
     <div class="btn-verify top10">
       <el-button type="primary" @click="checkVerify">提交</el-button>
     </div>
-    <!--查看校验息-->
+    <!--查看校验信息-->
     <out-dialog :form="form"></out-dialog>
-    <!---->
+    <!--缸号查询后的出库单-->
+    <vatout :verifyData="verifyData"></vatout>
 
   </div>
 </template>
@@ -51,7 +52,8 @@
   import itable from '../itable.vue';
   import wheader from '../Wheader.vue';
   import outDialog from './out_dialog.vue';
-  import {openCheck,closeCheck} from '../../common/js/axios/getData'
+  import vatout from './vat_out.vue';
+  import {openVerify,closeCheck,outCheck,postVerify,outVerify} from '../../common/js/axios/getData'
   export default {
     name: "outVerify",
     data(){
@@ -249,7 +251,8 @@
       itable,
       wheader,
       isearch,
-      outDialog
+      outDialog,
+      vatout
     },
     mounted(){
       this.client.onConnectionLost = this.onConnectionLost;//注册连接断开处理事件
@@ -260,13 +263,13 @@
     methods:{
       checkIn(val){
         //出库单号
-        checkVerify(val).then(res=>{
+        outCheck(val).then(res=>{
           this.form = res;
           this.form.tableData = res.productoutPList;
           this.tableData = res.productoutDList;
           //提交信息按钮
           this.isPost = true;
-          //查看出库信息
+          //查看出库信息按钮
           this.flag = true;
         }).catch(err=>{
           console.log(err)
@@ -276,7 +279,7 @@
         //提交数据
         if(this.isPost){
           let data=this.$store.state.historyId;
-          postList(data).then(res=>{
+          postVerify(data).then(res=>{
             this.$message({
               message:res,
               type: 'success'
@@ -311,14 +314,30 @@
         //查看出库信息
         this.flag = true;
         //缸号信息
-        let data =  encodeURIComponent(this.vatInput);
+        let data = encodeURIComponent(this.vatInput);
         //缸号查询
+        outVerify(data).then(res=>{
+          this.verifyData = res.data;
+          this.$store.state.inShow = true;
 
+        }).catch(err=>{
+          this.$message({
+            message: res.message,
+            type: 'warning'
+          });
+        })
         //显示出库下拉
 //        this.$store.state.inShow = true;
 
       },
+      vatCheck(val){
+        this.form = val;
+        this.form.tableData = val.productoutPList;
+        this.tableData = val.productoutDList;
+        this.$store.state.show = true;
+        this.flag = true;
 
+      },
       onConnectionLost(responseObject) {
         if (responseObject.errorCode !== 0) {
           console.log("onConnectionLost:"+responseObject.errorMessage);
