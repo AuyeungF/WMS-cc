@@ -5,7 +5,7 @@
         <div class="search-left">
           <isearch class="bottom10"
                    :name="typeName"
-                   :flag="inFlag"
+                   :flag="outFlag"
                    @checkIn="checkIn">
           </isearch>
         </div>
@@ -42,7 +42,7 @@
     <!--查看校验信息-->
     <out-dialog :form="form"></out-dialog>
     <!--缸号查询后的出库单-->
-    <vatout :verifyData="verifyData"></vatout>
+    <vatout :verifyData="verifyData" :vatNo="vatNo"></vatout>
 
   </div>
 </template>
@@ -53,13 +53,13 @@
   import wheader from '../Wheader.vue';
   import outDialog from './out_dialog.vue';
   import vatout from './vat_out.vue';
-  import {openVerify,closeCheck,outCheck,postVerify,outVerify} from '../../common/js/axios/getData'
+  import {openVerify,closeCheck,outCheck,postVerify,outVerify} from '../../common/js/axios/getData';
   export default {
     name: "outVerify",
     data(){
       return {
-        selectShow:false,
-        tableData: [],
+        selectShow:false, /*是否显示多选框*/
+        tableData: [],    /*数据源*/
         typeName:"校验单号",
         vatName:"缸号",
         colunms:[
@@ -126,11 +126,11 @@
             align:"center",
             sortable:false
           }
-        ],
+        ],    /*表头*/
         option: {
           index: true, //序号
           loading: false, // 表格loading加载动画控制
-        }, // table 序号的参数
+        },  /*table 序号的参数*/
         Pagination:{
           pageShow:false,/*是否显示分页*/
           currentPage:0,/*当前第几页*/
@@ -139,12 +139,12 @@
         operations:{
           btnShow:false,/*显示操作按钮*/
         },
-        user:"admin",
-        pass:"admin",
-        topic:"event/validate",
-        isPost:false,
-        vatFlag:false,
-        flag:false,
+        user:"admin",   /*MQ账号*/
+        pass:"admin",   /*MQ密码*/
+        topic:"event/validate", /*订阅主题*/
+        isPost:false,     /*控制提交按钮*/
+        vatFlag:false,    /*控制缸号按钮*/
+        flag:false,       /*控制查看信息按钮*/
         form:{
           selectShow:false,
           tableData:[],
@@ -239,13 +239,14 @@
           operations:{
             btnShow:false,/*显示操作按钮*/
           },
-        },
-        inFlag:false,
-        vatInput:"",
+        },      /*主表数据信息*/
+        outFlag:false,   /*控制查询出库按钮*/
+        vatInput:"",     /*缸号*/
+        vatNo:"",       /*传入缸号*/
       }
     },
     created(){
-      this.client=new Messaging.Client("192.168.1.105",61614,"myclientid_" + parseInt(Math.random() * 100, 10));
+      this.client=new Messaging.Client("192.168.43.55",61614,"myclientid_" + parseInt(Math.random() * 100, 10));
     },
     components:{
       itable,
@@ -314,12 +315,11 @@
         //查看出库信息
         this.flag = true;
         //缸号信息
-        let data = encodeURIComponent(this.vatInput);
+        this.vatNo = encodeURIComponent(this.vatInput);
         //缸号查询
-        outVerify(data).then(res=>{
+        outVerify(this.vatNo).then(res=>{
           this.verifyData = res.data;
           this.$store.state.inShow = true;
-
         }).catch(err=>{
           this.$message({
             message: res.message,

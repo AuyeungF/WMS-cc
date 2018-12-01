@@ -34,8 +34,10 @@ export const outCheck = (data) => axios('/data/getValidateOutOrder/'+data);
 /*  缸号查询校验  */
 export const outVerify = (data) =>  axios('/data/getOutNoListByVatDye/'+data);
 /*  查询缸号后出库查询 */
-export const vatOut = (data) =>axios('/data/getValidateOutOrder/'+data.out_no+"?vatDye="+data.vat_no);
+export const vatOut = (data) => axios('/data/getValidateOutOrder/'+data.outNo+"?vatDye="+data.vatNo);
 /*  出库校验提交  */
 export const postVerify = (data) => axios('/data/saveOutValidate/' + data);
 /*  开始校验  */
 export const openVerify = () => axios('/reader/validate?type=out');
+/*  校验历史记录  */
+export const verifyHistory = (data) =>  axios('/data/getOutValidateHistory/' + data);

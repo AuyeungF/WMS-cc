@@ -45,14 +45,14 @@
               },
               {
                 prop:"in_type",
-                label:"出库类型",
+                label:"入库类型",
                 width:"120",
                 align:"center",
                 sortable:false
               },
               {
                 prop:"in_date",
-                label:"出库日期",
+                label:"入库日期",
                 width:"200",
                 align:"center",
                 sortable:false

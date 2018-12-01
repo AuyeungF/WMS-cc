@@ -19,7 +19,7 @@
 
 <script>
   import itable from '../itable.vue';
-  import {verifyItem} from '../../common/js/axios/getData';
+  import {verifyHistory} from '../../common/js/axios/getData';
   import {filetime} from '../../common/js/filterData'
   export default {
     name: "historyPrint",
@@ -27,25 +27,25 @@
     data(){
       return{
         tableData:[],
-        selectShow:true,
+        selectShow:false,
         colunms:[
           {
-            prop:"in_no",
-            label:"单号",
+            prop:"out_no",
+            label:"出库单号",
             width:"120",
             align:"center",
             sortable:false
           },
           {
-            prop:"in_type",
-            label:"入库类型",
+            prop:"out_type",
+            label:"出库类型",
             width:"120",
             align:"center",
             sortable:false
           },
           {
-            prop:"in_date",
-            label:"入库日期",
+            prop:"out_date",
+            label:"出库日期",
             width:"200",
             align:"center",
             sortable:false
@@ -93,7 +93,7 @@
             sortable:false
           },
           {
-            prop:"weight_in",
+            prop:"qty_kg",
             label:"重量",
             width:"120",
             align:"center",
@@ -115,14 +115,14 @@
           },
           {
             prop:"erpCnt",
-            label:"erp入库条数",
+            label:"erp出库条数",
             width:"120",
             align:"center",
             sortable:false
           },
           {
             prop:"cnt",
-            label:"实际入库条数",
+            label:"实际出库条数",
             width:"120",
             align:"center",
             sortable:false
@@ -154,7 +154,7 @@
           loading: false, // 表格loading加载动画控制
         }, // table 序号的参数
         Pagination:{
-          pageShow:true,/*是否显示分页*/
+          pageShow:false,/*是否显示分页*/
           currentPage:0,/*当前第几页*/
           total:0,/*总共多小条*/
         },/*分页配置*/
@@ -165,10 +165,16 @@
     },
     mounted(){
       let data = this.$store.state.historyId;
+      verifyHistory(data).then(res=>{
+        let str = JSON.parse(res.data);
+        this.tableData = str;
+      }).catch(err=>{
+        console.log(err)
+      })
     },
     methods:{
       btnRetun(){
-        this.$router.push('/print');
+        this.$router.push('/verify');
       },
       //分页查询
       pageChange(val){

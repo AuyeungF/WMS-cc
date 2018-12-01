@@ -4,7 +4,7 @@ Vue.use(vuex);
 
 export default new vuex.Store({
   state:{
-    show:true,
+    show:false,
     printShow:false,
     isVerify:false,
     dept:"",

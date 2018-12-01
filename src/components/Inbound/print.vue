@@ -164,14 +164,6 @@
                 type: 'warning'
               });
             }
-            /*this.$store.state.clothNo = data;
-            let str = JSON.parse(JSON.parse(res.data));
-            if(str.productInDList != '') {
-              this.tableData = str.productInDList;
-            }
-            str.date = new Date(str.in_date);
-            this.form = str;*/
-//            this.$store.state.show = true;
             this.vatFlag=false;
           })
           .catch(err=>{

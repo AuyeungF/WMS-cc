@@ -7,7 +7,7 @@
             <el-col>
               <el-row class="form-list">
                 <el-form ref="form" :model="form" label-width="90px">
-                  <div class="form-one bottom10 top10">
+                  <div class="form-input bottom10 top10">
                     <el-col :span="4" class="Det-form-item">
                       <el-form-item label="出库单号:">
                         <el-input v-model="form.out_no" :disabled="isShow"></el-input>
@@ -41,7 +41,6 @@
                           type="date"
                           placeholder="选择日期"
                           value-format="yyyy-MM-dd"
-                          :picker-options="pickerOptions"
                           :disabled="isShow">
                         </el-date-picker>
                       </el-form-item>
@@ -54,7 +53,7 @@
                       </el-form-item>
                     </el-col>
                   </div>
-                  <div class="form-two bottom10">
+                  <div class="form-input bottom10">
                     <el-col :span="4" class="Det-form-item" >
                       <el-form-item label="收款类型:">
                         <el-input
@@ -112,28 +111,6 @@
     },
     data(){
       return {
-        pickerOptions: {
-          shortcuts: [{
-            text: '今天',
-            onClick(picker) {
-              picker.$emit('pick', new Date());
-            }
-          }, {
-            text: '昨天',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24);
-              picker.$emit('pick', date);
-            }
-          }, {
-            text: '一周前',
-            onClick(picker) {
-              const date = new Date();
-              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-              picker.$emit('pick', date);
-            }
-          }]
-        },
         isShow:false,
       }
     },

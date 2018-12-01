@@ -3,7 +3,7 @@
     <el-dialog title="入库单号" :visible.sync="$store.state.inShow" width="500px">
       <el-form :model="form">
         <el-form-item label="入库单号" :label-width="formLabelWidth">
-          <el-select v-model="form.inNo" placeholder="请选择单号">
+          <el-select v-model="form.outNo" placeholder="请选择单号">
             <el-option v-for="item in verifyData"
                        :value="item"
                        :label="item">
@@ -27,13 +27,17 @@
       verifyData:{
         type:Array,
         default:()=>[]
+      },
+      vatNo:{
+        type:String,
+        default:null
       }
     },
     data(){
       return{
         formLabelWidth: '80px',
         form:{
-          inNo:"",
+          outNo:"",
         }
       }
     },
@@ -41,9 +45,11 @@
     },
     methods:{
       inCheck(){
-        let inNo =this.form.inNo;
-        vatOut(inNo).then(res=>{
-          this.form.inNo = '';
+        let data = {};
+        data.outNo =this.form.outNo;
+        data.vatNo = this.vatNo;
+        vatOut(data).then(res=>{
+          this.form.outNo = '';
           let data = JSON.parse(res.data);
           this.$store.state.inShow = false;
           this.$emit('vatCheck',data);

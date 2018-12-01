@@ -12,11 +12,11 @@ var cssSourceMapDev = (env === 'development' && config.dev.cssSourceMap)
 var cssSourceMapProd = (env === 'production' && config.build.productionSourceMap)
 var useCssSourceMap = cssSourceMapDev || cssSourceMapProd
 module.exports = {
- /* entry: {
+  entry: {
     index:"./src/module/index/index.js",
     outbound:"./src/module/outbound/outbound.js"
-  },*/
-  entry:entries,
+  },
+  /*entry:entries,*/
   output: {
     path: config.build.assetsRoot,
     publicPath: process.env.NODE_ENV === 'production' ? config.build.assetsPublicPath : config.dev.assetsPublicPath,
