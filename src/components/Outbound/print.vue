@@ -39,7 +39,7 @@
         </div>
       </div>
       <!--查看主入库信息-->
-      <out-dialog :form="form"></out-dialog>
+     <!-- <out-dialog :form="form"></out-dialog>-->
       <!--确认打印-->
       <p-dialog :form="form"
                 :arrList="arrList"
@@ -224,7 +224,8 @@
         form:{},
         flag:false,
         arrList:[],
-        list:[]
+        list:[],
+        outflag:true
       }
     },
     mounted(){

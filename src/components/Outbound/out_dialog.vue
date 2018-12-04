@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="入库信息" :visible.sync="$store.state.show" width="100%">
+  <el-dialog title="出库信息" :visible.sync="$store.state.show" width="100%">
     <div class="detail-box">
       <div class="Det-body">
         <div class="Det-form">
@@ -83,12 +83,12 @@
           </el-row>
         </div>
         <div class="outpick-table top10">
-          <itable :tableData="form.tableData"
-                  :colunms="form.colunms"
-                  :option="form.option"
-                  :Pagination="form.page"
-                  :operations="form.operations"
-                  :mutiSelect="form.selectShow">
+          <itable :tableData="tableData"
+                  :colunms="colunms"
+                  :option="index"
+                  :Pagination="page"
+                  :operations="operations"
+                  :mutiSelect="selectShow">
           </itable>
         </div>
       </div>
@@ -102,6 +102,30 @@
     name: "detail",
     props:{
       form:{
+        type:Object,
+        default:{}
+      },
+      selectShow:{
+        type:Boolean,
+        default:false,
+      },
+      tableData:{
+        type:Array,
+        default:()=>[]
+      },
+      colunms:{
+        type:Array,
+        default:()=>[]
+      },
+      page:{
+        type:Object,
+        default:{}
+      },
+      index:{
+        type:Object,
+        default:{}
+      },
+      operations:{
         type:Object,
         default:{}
       }

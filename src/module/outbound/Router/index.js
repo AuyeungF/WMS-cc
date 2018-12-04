@@ -4,6 +4,7 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 export default new Router({
+  made:'hash',
   routes: [
     {
       path: '/',
@@ -18,27 +19,15 @@ export default new Router({
       component: resolve => require(['components/Home.vue'], resolve),
       children:[
         {
-          path: '/print',
-          name:"print",
-          menuName:"出库主表",
-          component: resolve => require(['components/Outbound/print.vue'], resolve)
-        },
-        {
           path: '/verify',
           name:"verify",
-          menuName:"出库从表",
+          menuName:"出库校验",
           component: resolve => require(['components/Outbound/verify.vue'], resolve)
-        },
-        {
-          path: '/historyPrint',
-          name:"historyPrint",
-          menuName:"出库从表",
-          component: resolve => require(['components/Outbound/historyPrint.vue'], resolve)
         },
         {
           path: '/historyVerify',
           name:"historyVerify",
-          menuName:"出库从表",
+          menuName:"出库校验历史纪录",
           component: resolve => require(['components/Outbound/historyVerify.vue'], resolve)
         }]
     },

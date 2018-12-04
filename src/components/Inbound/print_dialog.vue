@@ -5,10 +5,10 @@
     width="30%"
     :before-close="handleClose">
     <div class="print-table">确定要打印</div>
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="$store.state.printShow = false">取 消</el-button>
-      <el-button type="primary" @click="printing" :disabled="printShow">确 定</el-button>
-    </span>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="closePrint">取 消</el-button>
+      <el-button type="primary" @click="printing" :disabled="isShow">确 定</el-button>
+    </div>
   </el-dialog>
 </template>
 
@@ -31,84 +31,68 @@
           default:[]
         }
       },
-      date(){
+      data(){
           return{
-            selectShow:true,
-            tableData: [],
-            colunms:[
-              {
-                prop:"fab_roll",
-                label:"布票号",
-                width:"",
-                align:"center",
-                sortable:false
-              },
-              {
-                prop:"weight_in",
-                label:"入库重量",
-                width:"",
-                align:"center",
-                sortable:false
-              },
-              {
-                prop:"weight_s",
-                label:"库存重量",
-                width:"",
-                align:"center",
-                sortable:false
-              }
-            ],
-            option: {
-              index: true, //序号
-              loading: false, // 表格loading加载动画控制
-            }, // table 序号的参数
-            Pagination:{
-              pageShow:false,/*是否显示分页*/
-              currentPage:0,/*当前第几页*/
-              total:0,/*总共多小条*/
-            },/*分页配置*/
-            operations:{
-              btnShow:false,/*显示操作按钮*/
-            },
-            printShow:false,
-            fullscreenLoading: false
+            isShow:false
           }
       },
       components:{itable},
       methods:{
         printing(){
-          this.$store.state.printing = true;
+          //接收需要打印的信息
           this.form.productInDList = this.list;
+          //时间格式的转换
           let date = this.form.in_date;
           let  time = new Date(date);
           let  time1 = time.getTime();
           this.form.in_date = time1;
+          //创建一个对象存储提交的信息
           let data={};
           data.key = this.$store.state.historyId;
           data.form = this.form;
-          this.printShow = true;
+          this.isShow = true;
           if(this.arrList.length != 0){
-            printAll(this.arrList)
-              .then(res=>{
-                if(res == '打印成功') {
-                  saveInbound(data).then(res=>{
-                    this.$store.state.printing = false;
-                    this.$message({
-                      message: '保存成功' ,
-                      type: 'success'
-                    })}).catch(err=>{console.log(err)});
-                  this.printShow = false;
-                  this.$store.state.printShow = false;
-                }
-              }).catch(err=>{
-              console.log(err)
-            })
+            saveInbound(data).then(res=>{
+              this.isShow = false;
+              this.$store.state.printShow = false;
+              this.arrList = [];
+              this.$emit('clearList',true);
+              var msg = new SpeechSynthesisUtterance("保 存 成 功");
+              window.speechSynthesis.speak(msg);
+              this.$message({
+                message: '保存成功' ,
+                type: 'success'
+              });
+              printAll(this.arrList).then(res=>{}).catch(err=>{
+                this.$message({
+                  message: err.data ,
+                  type: 'danger'
+                })
+              })
+            }).catch(err=>{
+              this.$store.state.printShow = false;
+              this.isShow = false;
+              this.$message({
+                message: err.data ,
+                type: 'danger'
+              })
+            });
+
+
+
           } else {
             this.$message({
               message: '请选择要打印的单号' ,
-              type: 'waring'
+              type: 'warning'
             })
           }
+        },
+        closePrint(){
+          this.$store.state.printShow = false;
+          this.isShow = false;
+        },
+        handleClose(){
+         this.closePrint();
         }
       }
 

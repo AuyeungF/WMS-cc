@@ -6,8 +6,8 @@
     :before-close="handleClose">
     <div class="print-table">确定要打印</div>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="$store.state.printShow = false">取 消</el-button>
-      <el-button type="primary" @click="printing">确 定</el-button>
+      <el-button @click="closePrint">取 消</el-button>
+      <el-button type="primary" @click="printing" :disabled="printShow">确 定</el-button>
     </span>
   </el-dialog>
 </template>
@@ -70,6 +70,7 @@
         operations:{
           btnShow:false,/*显示操作按钮*/
         },
+        printShow:false
       }
     },
     components:{itable},
@@ -83,10 +84,12 @@
         let data={};
         data.key = this.$store.state.historyId;
         data.form = this.form;
+
         printAll(this.arrList)
           .then(res=>{
             if(res == '打印成功') {
               saveInbound(data).then(res=>{
+                this.arrList = [];
                 this.$message({
                   message: '保存成功' ,
                   type: 'success'
@@ -104,6 +107,9 @@
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       });*/
+      },
+      closePrint(){
+        this.$store.state.printShow = false;
       }
     }
 

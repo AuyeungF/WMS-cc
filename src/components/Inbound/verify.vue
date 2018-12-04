@@ -5,14 +5,14 @@
          <div class="search-left">
            <isearch class="bottom10"
                     :name="typeName"
+                    :flag="inFlag"
                     @checkIn="checkIn">
            </isearch>
          </div>
          <div class="search-right">
            <div class="btn-show">
              <el-button type="primary" @click="historyVerify">校验历史记录</el-button>
-             <el-button class="btn-open" type="warning" @click="starCheck">开始校验</el-button>
-             <el-button class="btn-close" type="danger" @click="stopCheck">停止校验</el-button>
+             <el-button type="warning" @click="clearData">清空信息</el-button>
            </div>
          </div>
        </div>
@@ -36,9 +36,9 @@
   import itable from '../itable.vue';
   import wheader from '../Wheader.vue';
   import {checkVerify,addList,openCheck,closeCheck,postList} from '../../common/js/axios/getData'
-    export default {
-        name: "Inbound",
-        data(){
+  export default {
+      name: "Inbound",
+      data(){
           return {
             selectShow:false,
             tableData: [],
@@ -81,7 +81,8 @@
             user:"admin",
             pass:"admin",
             topic:"event/validate",
-            isPost:false
+            isPost:false,
+            inFlag:false
           }
         },
       created(){
@@ -99,10 +100,74 @@
         this.$store.state.historyId = str;
       },
       methods:{
+        /*  校验入库单 */
         checkIn(val){
+          this.inFlag = true;
           checkVerify(val).then(res=>{
+            //返回的数据
             this.tableData = res;
+            //是否能提交数据
             this.isPost = true;
+            //恢复搜索按钮
+            this.inFlag = false;
+            //开始校验
+            this.starCheck();
+          }).catch(err=>{
+            //恢复搜索按钮
+            this.inFlag = false;
+            this.$message({
+              message: err.data,
+              type: 'warning'
+            });
+          })
+        },
+        /*  提交数据接口  */
+        checkVerify(){
+          //关闭校验
+         this.stopCheck();
+          //提交数据
+          if(this.isPost){
+            let data=this.$store.state.historyId;
+            postList(data).then(res=>{
+              //取消提交状态
+              this.isPost = false;
+              this.$message({
+                message:res,
+                type: 'success'
+              })
+            }).catch(err=>{
+              this.$message({
+              message:err.data,
+                type: 'waring'
+              })
+            })
+          } else {
+            this.$message({
+              message: '校验完才能提交',
+              type: 'warning'
+            });
+          }
+        },
+        /*  跳转到历史校验页面*/
+        historyVerify(){
+          this.$router.push('/historyVerify')
+        },
+        starCheck(){
+          openCheck().then(res=>{
+            //开始校验
+            this.client.connect({
+              userName:this.user,
+              password:this.pass,
+              onSuccess:this.onConnect
+            });//连接服务器并注册连接成功处理事件
+          }).catch(err=>{
+            console.log(err)
+          })
+        },
+        stopCheck(){
+          closeCheck().then(res=>{
+            //停止校验
+            this.disconnect();
           }).catch(err=>{
             console.log(err)
           })
@@ -127,47 +192,8 @@
         disconnect(){
           this.client.disconnect();
         },
-        checkVerify(){
-         //提交数据
-          if(this.isPost){
-            let data=this.$store.state.historyId;
-            postList(data).then(res=>{
-              this.$message({
-                message:res,
-                type: 'success'
-              })
-            }).catch(err=>{
-              console.log(err)
-            })
-          } else {
-            this.$message({
-              message: '校验完才能提交',
-              type: 'warning'
-            });
-          }
-        },
-        historyVerify(){
-          this.$router.push('/historyVerify')
-        },
-        starCheck(){
-          openCheck().then(res=>{
-            //开始校验
-            this.client.connect({
-              userName:this.user,
-              password:this.pass,
-              onSuccess:this.onConnect
-            });//连接服务器并注册连接成功处理事件
-          }).catch(err=>{
-            console.log(err)
-          })
-        },
-        stopCheck(){
-          closeCheck().then(res=>{
-            //停止校验
-            this.disconnect();
-          }).catch(err=>{
-            console.log(err)
-          })
+        clearData(){
+          this.tableData = [];
         }
       }
     }

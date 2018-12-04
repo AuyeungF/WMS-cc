@@ -40,11 +40,11 @@ export default async(url ='', data = {}, method = 'GET') => {
       }
     }).catch(err => {
       if(err.response.status == 401) {
-        resolve(err.response.data);
+        reject(err.response);
       }else if(err.response.status == 402){
-        resolve(err.response.data);
+        reject(err.response);
       } else {
-        reject(err);
+        reject(err.response);
       }
     });
   })

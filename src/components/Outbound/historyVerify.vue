@@ -167,7 +167,15 @@
       let data = this.$store.state.historyId;
       verifyHistory(data).then(res=>{
         let str = JSON.parse(res.data);
-        this.tableData = str;
+        let length = str.list.length;
+        for(var i=0;i<length;i++){
+          let item = str.list[i];
+          item.out_date = filetime(new Date(item.out_date));
+          item.createTime = filetime(new Date(item.createTime));
+        }
+        console.log(str)
+        this.tableData = str.list;
+
       }).catch(err=>{
         console.log(err)
       })
